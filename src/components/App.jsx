@@ -1,10 +1,10 @@
-import './App.css'
+import Body from './Body'
 
 function App() {
 
   return (
     <>
-      Netflix gpt
+      <Body />
     </>
   )
 }
