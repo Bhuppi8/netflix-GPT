@@ -1,4 +1,5 @@
 import React from 'react'
+import netflixLogo from '../assets/logo.png' 
 
 const Header = () => {
   return (
@@ -8,7 +9,7 @@ const Header = () => {
         {/* Netflix Logo */}
         <img 
           className="w-36 md:w-44" 
-          src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png" 
+          src={netflixLogo} 
           alt="Netflix Logo" 
         />
         
