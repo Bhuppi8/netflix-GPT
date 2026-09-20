@@ -1,14 +1,26 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Header from './Header'
 import netflixBg from '../assets/netflix-bg.jpg' 
+import { checkValidateData } from '../utils/validate'
 
 const Login = () => {
 
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const email = useRef(null);
+  const password = useRef(null);
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
+
+  const handleButtonClick = () => {
+    const message = checkValidateData(email.current.value, password.current.value);
+    console.log(message)
+    setErrorMsg(message)
+    // console.log(password)
+  }
 
   return (
     <div>
@@ -21,7 +33,10 @@ const Login = () => {
         >
 
         <div className="flex justify-center items-center grow px-4 pt-24 pb-12 z-10">
-          <form className="w-full max-w-[450px] p-8 md:p-16 bg-black/70 rounded-md text-white flex flex-col backdrop-blur-[2px]">
+          <form
+            onSubmit={(e) => e.preventDefault()}  
+            className="w-full max-w-[450px] p-8 md:p-16 bg-black/70 rounded-md text-white flex flex-col backdrop-blur-[2px]"
+          >
             <h1 className="text-3xl font-bold mb-7">
               {isSignInForm ? "Sign In" : "Sign Up"}
             </h1>
@@ -33,16 +48,22 @@ const Login = () => {
               />)
             }
             <input 
+              ref={email}
               type='text' 
               placeholder='Email Address' 
               className='w-full p-4 mb-4 bg-[#161616]/80 text-white rounded border border-gray-500 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400' 
             />
             <input 
+              ref={password}
               type='password' 
               placeholder='password' 
               className='w-full p-4 mb-4 bg-[#161616]/80 text-white rounded border border-gray-500 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400' 
-            />
-            <button className="w-full bg-[#E50914] text-white p-3.5 rounded font-semibold text-base hover:bg-red-700 transition duration-200 ease-in-out cursor-pointer">
+              />
+            <p className="py-4 text-red-400 text-sm">{errorMsg}</p>
+            <button 
+              className="w-full bg-[#E50914] text-white p-3.5 rounded font-semibold text-base hover:bg-red-700 transition duration-200 ease-in-out cursor-pointer"
+              onClick={handleButtonClick}
+            >
               Sign In
             </button>
             {/* Toggle Text Links */}
