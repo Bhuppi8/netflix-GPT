@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react'
 import Header from './Header'
 import netflixBg from '../assets/netflix-bg.jpg' 
 import { checkValidateData } from '../utils/validate'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
+import { auth } from '../utils/firebase';
 
 const Login = () => {
 
@@ -17,9 +19,35 @@ const Login = () => {
 
   const handleButtonClick = () => {
     const message = checkValidateData(email.current.value, password.current.value);
-    console.log(message)
     setErrorMsg(message)
-    // console.log(password)
+    if(message) return;
+
+    if(!isSignInForm) {
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMsg(errorCode+ "-" + errorMessage)
+      });
+
+    } else {
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(user)
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMsg(errorCode+ "-" + errorMessage)
+      });
+    }
+    
   }
 
   return (

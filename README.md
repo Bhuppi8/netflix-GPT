@@ -5,22 +5,28 @@ This template provides a minimal setup to get React working in Vite with HMR and
 
 # Netflix GPT
 
-- create react App
-- configured TailwincCSS
-
+- Create React App
+- Configured TailwindCSS
+- Header
+- Routing of App
+- Login Form
+- Sign up Form
+- Form Validation
+- useRef Hook
+- Firebase Setup
+- Deploying our app to production
+- Create SignUp User Account
+- implement Sign In user Api
+- Created Redux store with UserSlice
 
 # Features
-- Login/Sign up Form
-   -- Sign In / Sign Up Form
-   -- redirect to Browse Page
+- Login/Sign Up
+  - Sign In /Sign up Form
+  - redirect to Browse Page
 - Browse (after authentication)
-   -- Header
-   -- Main Movie
-      -- Trailer in Background
-      -- Title & Descripton 
-      -- MovieSuggestions
-         -- MovieList * N
-
-- NetflisGPT
-   -- Search Bar
-   -- Movie Suggestion 
+  - Header
+  - Main Movie
+    - Tailer in Background
+    - Title & Description
+    - MovieSuggestions
+      - MovieLists * N
