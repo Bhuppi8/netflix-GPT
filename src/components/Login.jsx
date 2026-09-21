@@ -2,9 +2,10 @@ import React, { useRef, useState } from 'react'
 import Header from './Header'
 import netflixBg from '../assets/netflix-bg.jpg' 
 import { checkValidateData } from '../utils/validate'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/firebase';
 import { useNavigate } from 'react-router-dom';
+import profileF from '../assets/profile1.png'; 
 
 const Login = () => {
 
@@ -13,8 +14,10 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
+
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -29,7 +32,15 @@ const Login = () => {
       createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
       .then((userCredential) => {
         const user = userCredential.user;
-        navigate('/browse')
+        updateProfile(user, {
+          displayName: name.current.value, 
+          photoURL: profileF,
+        }).then(() => {
+          // Profile updated!
+          navigate('/browse')
+        }).catch((error) => {
+          setErrorMsg(errorMessage)
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -73,6 +84,7 @@ const Login = () => {
             </h1>
             {!isSignInForm && (
               <input 
+                ref={name}
                 type='text' 
                 placeholder='Full Name' 
                 className='w-full p-4 mb-4 bg-[#161616]/80 text-white rounded border border-gray-500 focus:outline-none focus:ring-2 focus:ring-white placeholder:text-gray-400' 
