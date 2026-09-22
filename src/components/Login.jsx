@@ -6,6 +6,8 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { auth } from '../utils/firebase';
 import { useNavigate } from 'react-router-dom';
 import profileF from '../assets/profile1.png'; 
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
 
 const Login = () => {
 
@@ -18,6 +20,8 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
 
+  const dispatch = useDispatch();
+
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
@@ -28,26 +32,22 @@ const Login = () => {
     setErrorMsg(message)
     if(message) return;
 
-    if(!isSignInForm) {
+    if (!isSignInForm) {
       createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        updateProfile(user, {
-          displayName: name.current.value, 
-          photoURL: profileF,
-        }).then(() => {
-          // Profile updated!
-          navigate('/browse')
-        }).catch((error) => {
-          setErrorMsg(errorMessage)
+        .then((userCredential) => {
+          return updateProfile(userCredential.user, {
+            displayName: name.current.value,
+            photoURL: profileF,
+          });
+        })
+        .then(() => {
+          const { uid, email: userEmail, displayName, photoURL } = auth.currentUser;
+          dispatch(addUser({ uid, email: userEmail, displayName, photoURL }));
+          navigate('/browse');
+        })
+        .catch((error) => {
+          setErrorMsg(error.code + " - " + error.message);
         });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setErrorMsg(errorCode+ "-" + errorMessage)
-      });
-
     } else {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
       .then((userCredential) => {
