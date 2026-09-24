@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import netflixLogo from '../assets/logo.png' 
 import userIcon from '../assets/user-icon.png' 
 import { auth } from '../utils/firebase';
 import { useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { useSelector } from 'react-redux';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { addUser, removeUser } from '../utils/userSlice';
 
 const Header = () => {
   // State to manage showing/hiding the sign-out menu
@@ -12,17 +13,29 @@ const Header = () => {
   const user = useSelector(store => store.user);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const dispatch = useDispatch();
+
   const handleSignOut = () => {
     signOut(auth)
-     .then(() => {
-      navigate('/');
-      console.log("Signing out...")
-    })
     .catch((error)=>{
       navigate('/error');
       console.log("error")
      })
   }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid, email, displayName, photoURL }));
+        navigate('/browse');
+      } else {
+        dispatch(removeUser());
+        navigate('/');
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <header className="absolute top-0 left-0 w-full z-20 px-8 py-4 bg-gradient-to-b from-black/80 to-transparent">
