@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import netflixLogo from '../assets/logo.png' 
-import userIcon from '../assets/user-icon.png' 
 import { auth } from '../utils/firebase';
 import { useNavigate } from 'react-router-dom';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
+import { toggleGptSearchView } from '../utils/gptSlice';
+import {SUPPORTED_LANG} from '../utils/constants';
 
 const Header = () => {
   // State to manage showing/hiding the sign-out menu
@@ -21,6 +22,10 @@ const Header = () => {
       navigate('/error');
       console.log("error")
      })
+  }
+
+  const handleGptSearchClick = () => {
+    dispatch(toggleGptSearchView());
   }
 
   useEffect(() => {
@@ -47,10 +52,31 @@ const Header = () => {
           src={netflixLogo} 
           alt="Netflix Logo" 
         />
+
+        <select
+          className="bg-black/70 border border-gray-400 text-white text-sm px-3 py-1.5 rounded-sm outline-none cursor-pointer ml-auto mr-2"
+        >
+          {SUPPORTED_LANG.map((lang) => (
+            <option
+              key={lang.identifier}
+              value={lang.identifier}
+              className="bg-black text-white"
+            >
+              {lang.name}
+            </option>
+          ))}
+        </select>
+
+        <button 
+          className='bg-purple-600 text-white px-4 py-1.5 rounded font-medium text-sm hover:bg-purple-700 transition cursor-pointer'
+          onClick={handleGptSearchClick}
+        >
+          GPT Search
+        </button>
         
         {/* User Icon & Dropdown Container */}
         {user && 
-          <div className="relative">
+          <div className="relative ml-2">
             <div 
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setShowDropdown(!showDropdown)}

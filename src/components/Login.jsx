@@ -39,7 +39,7 @@ const Login = () => {
             displayName: name.current.value,
             photoURL: profileF,
           });
-        })
+        }) 
         .then(() => {
           const { uid, email: userEmail, displayName, photoURL } = auth.currentUser;
           dispatch(addUser({ uid, email: userEmail, displayName, photoURL }));

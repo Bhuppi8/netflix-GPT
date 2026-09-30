@@ -4,6 +4,8 @@ import MovieCard from "./MovieCard";
 const MovieList = ({ title, movies }) => {
   const containerRef = useRef(null);
 
+  const safeMovies = movies ?? [];
+
   useEffect(() => {
     const container = containerRef.current;
 
@@ -33,11 +35,11 @@ const MovieList = ({ title, movies }) => {
         ref={containerRef}
         className="movie-scroll-row flex flex-nowrap gap-4 overflow-x-auto"
       >
-        {movies.map((movie) => (
+        {safeMovies.map((movie) => (
           <MovieCard
             key={movie.id}
             posterPath={movie.poster_path}
-            title={title}
+            title={movie.title}
           />
         ))}
       </div>
