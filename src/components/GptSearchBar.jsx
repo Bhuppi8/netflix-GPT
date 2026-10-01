@@ -1,7 +1,10 @@
 import React from "react";
 import lang from "../utils/languageConstant";
+import { useSelector } from "react-redux";
 
 const GptSearchBar = () => {
+
+  const langKey = useSelector(store => store.config.lang);
   const handleSubmit = (event) => {
     event.preventDefault();
   };
@@ -14,7 +17,7 @@ const GptSearchBar = () => {
       >
         <input
           type="text"
-          placeholder={lang.hindi.gptSearchPlaceholder}
+          placeholder={lang[langKey].gptSearchPlaceholder}
           className="min-w-0 flex-1 rounded-lg border border-gray-600 bg-gray-900 px-5 py-3 text-base text-white outline-none placeholder:text-gray-400 transition focus:border-red-600 focus:ring-2 focus:ring-red-600/40"
         />
 
@@ -22,7 +25,7 @@ const GptSearchBar = () => {
           type="submit"
           className="rounded-lg bg-red-600 px-8 py-3 font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-black active:scale-95"
         >
-          {lang.hindi.search}
+          {lang[langKey].search}
         </button>
       </form>
     </div>
