@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
 import { toggleGptSearchView } from '../utils/gptSlice';
 import {SUPPORTED_LANG} from '../utils/constants';
+import { changeLanguage } from '../utils/configSlice';
 
 const Header = () => {
   // State to manage showing/hiding the sign-out menu
@@ -27,6 +28,12 @@ const Header = () => {
   const handleGptSearchClick = () => {
     dispatch(toggleGptSearchView());
   }
+
+  const handleLangugeChange = (e) => {
+    dispatch(changeLanguage(e.target.value))
+  }
+
+  const showGptSearch = useSelector(store => store.gpt.showGptSearch)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -53,60 +60,65 @@ const Header = () => {
           alt="Netflix Logo" 
         />
 
-        <select
-          className="bg-black/70 border border-gray-400 text-white text-sm px-3 py-1.5 rounded-sm outline-none cursor-pointer ml-auto mr-2"
-        >
-          {SUPPORTED_LANG.map((lang) => (
-            <option
-              key={lang.identifier}
-              value={lang.identifier}
-              className="bg-black text-white"
-            >
-              {lang.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center">
 
-        <button 
-          className='bg-purple-600 text-white px-4 py-1.5 rounded font-medium text-sm hover:bg-purple-700 transition cursor-pointer'
-          onClick={handleGptSearchClick}
-        >
-          GPT Search
-        </button>
-        
-        {/* User Icon & Dropdown Container */}
-        {user && 
-          <div className="relative ml-2">
-            <div 
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              {/* Primary Profile Image */}
-              <img 
-                className="w-8 h-8 rounded" 
-                src={user?.photoURL}
-                alt="User Icon" 
-              />
-              <span></span>
-              <span className={`text-white text-[10px] transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}>
-                ▼
-              </span>
-            </div>
+          {showGptSearch && <select
+            className="bg-black/70 border border-gray-400 text-white text-sm px-3 py-1.5 rounded-sm outline-none cursor-pointer mr-2"
+            onChange={handleLangugeChange}
+          >
+            {SUPPORTED_LANG.map((lang) => (
+              <option
+                key={lang.identifier}
+                value={lang.identifier}
+                className="bg-black text-white"
+              >
+                {lang.name}
+              </option>
+            ))}
+          </select>}
 
-            {/* Simple Dropdown Menu */}
-            {showDropdown && (
-              <div className="absolute right-0 top-10 w-40 bg-black/95 text-white border border-gray-800 rounded py-3 shadow-xl z-30">
-                <div 
-                  className="text-center text-xs font-medium hover:underline cursor-pointer py-1"
-                  onClick={handleSignOut}
-                >
-                  Sign out of Netflix
-                </div>
+          <button 
+            className='bg-purple-600 text-white px-4 py-1.5 rounded font-medium text-sm hover:bg-purple-700 transition cursor-pointer'
+            onClick={handleGptSearchClick}
+          >
+            {showGptSearch ? "Home" : "GPT Search"}
+          </button>
+          
+          {/* User Icon & Dropdown Container */}
+          {user && 
+            <div className="relative ml-2">
+              <div 
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {/* Primary Profile Image */}
+                <img 
+                  className="w-8 h-8 rounded" 
+                  src={user?.photoURL}
+                  alt="User Icon" 
+                />
+                <span></span>
+                <span className={`text-white text-[10px] transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}>
+                  ▼
+                </span>
               </div>
-            )}
-          </div>
-        
-        }
+
+              {/* Simple Dropdown Menu */}
+              {showDropdown && (
+                <div className="absolute right-0 top-10 w-40 bg-black/95 text-white border border-gray-800 rounded py-3 shadow-xl z-30">
+                  <div 
+                    className="text-center text-xs font-medium hover:underline cursor-pointer py-1"
+                    onClick={handleSignOut}
+                  >
+                    Sign out of Netflix
+                  </div>
+                </div>
+              )}
+            </div>
+          
+          }
+        </div>
+
 
       </div>
     </header>
