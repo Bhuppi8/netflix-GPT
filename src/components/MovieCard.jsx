@@ -3,13 +3,13 @@ import { IMG_CDN_URL } from '../utils/constants'
 
 const MovieCard = ({posterPath}) => {
   return (
-    <div>
-      <div className="group w-64 flex-none cursor-pointer overflow-hidden rounded-xl bg-gray-800 transition duration-300 hover:scale-105">
+    <div className="w-36 shrink-0 sm:w-44 md:w-48">
+      <div className="aspect-[2/3] overflow-hidden rounded-lg bg-zinc-800">
         <img 
           alt='Movie card' 
           src={IMG_CDN_URL + posterPath}
           loading="lazy"
-          className="h-36 w-full object-cover"
+           className="block h-full w-full object-cover transition-transform duration-300 hover:scale-105"
         />
       </div>
     </div>

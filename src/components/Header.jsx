@@ -21,7 +21,6 @@ const Header = () => {
     signOut(auth)
     .catch((error)=>{
       navigate('/error');
-      console.log("error")
      })
   }
 
