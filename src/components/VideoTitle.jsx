@@ -1,10 +1,9 @@
-import React from 'react'
+import React from "react";
 
 const VideoTitle = ({ title, overview }) => {
   return (
     <div className="absolute inset-0 flex items-end z-10">
       <div className="w-full md:w-[55%] lg:w-[50%] px-6 md:px-10 lg:px-12 pb-16">
-
         <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg">
           {title}
         </h1>
@@ -22,10 +21,9 @@ const VideoTitle = ({ title, overview }) => {
             ⓘ More Info
           </button>
         </div>
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default VideoTitle
+export default VideoTitle;

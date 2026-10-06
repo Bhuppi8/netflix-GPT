@@ -1,48 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import netflixLogo from '../assets/logo.png' 
-import { auth } from '../utils/firebase';
-import { useNavigate } from 'react-router-dom';
-import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { useSelector, useDispatch } from 'react-redux';
-import { addUser, removeUser } from '../utils/userSlice';
-import { toggleGptSearchView } from '../utils/gptSlice';
-import {SUPPORTED_LANG} from '../utils/constants';
-import { changeLanguage } from '../utils/configSlice';
+import React, { useState, useEffect } from "react";
+import netflixLogo from "../assets/logo.png";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { addUser, removeUser } from "../utils/userSlice";
+import { toggleGptSearchView } from "../utils/gptSlice";
+import { SUPPORTED_LANG } from "../utils/constants";
+import { changeLanguage } from "../utils/configSlice";
 
 const Header = () => {
   // State to manage showing/hiding the sign-out menu
   const navigate = useNavigate();
-  const user = useSelector(store => store.user);
+  const user = useSelector((store) => store.user);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const dispatch = useDispatch();
 
   const handleSignOut = () => {
-    signOut(auth)
-    .catch((error)=>{
-      navigate('/error');
-     })
-  }
+    signOut(auth).catch((error) => {
+      navigate("/error");
+    });
+  };
 
   const handleGptSearchClick = () => {
     dispatch(toggleGptSearchView());
-  }
+  };
 
   const handleLangugeChange = (e) => {
-    dispatch(changeLanguage(e.target.value))
-  }
+    dispatch(changeLanguage(e.target.value));
+  };
 
-  const showGptSearch = useSelector(store => store.gpt.showGptSearch)
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(addUser({ uid, email, displayName, photoURL }));
-        navigate('/browse');
+        navigate("/browse");
       } else {
         dispatch(removeUser());
-        navigate('/');
+        navigate("/");
       }
     });
     return () => unsubscribe();
@@ -51,53 +50,51 @@ const Header = () => {
   return (
     <header className="absolute top-0 left-0 w-full z-20 px-8 py-4 bg-gradient-to-b from-black/80 to-transparent">
       <div className="max-w-7xl mx-auto flex items-center justify-between relative">
-        
         {/* Netflix Logo */}
-        <img 
-          className="w-28 md:w-36" 
-          src={netflixLogo} 
-          alt="Netflix Logo" 
-        />
+        <img className="w-28 md:w-36" src={netflixLogo} alt="Netflix Logo" />
 
         <div className="flex items-center">
+          {showGptSearch && (
+            <select
+              className="bg-black/70 border border-gray-400 text-white text-sm px-3 py-1.5 rounded-sm outline-none cursor-pointer mr-2"
+              onChange={handleLangugeChange}
+            >
+              {SUPPORTED_LANG.map((lang) => (
+                <option
+                  key={lang.identifier}
+                  value={lang.identifier}
+                  className="bg-black text-white"
+                >
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          )}
 
-          {showGptSearch && <select
-            className="bg-black/70 border border-gray-400 text-white text-sm px-3 py-1.5 rounded-sm outline-none cursor-pointer mr-2"
-            onChange={handleLangugeChange}
-          >
-            {SUPPORTED_LANG.map((lang) => (
-              <option
-                key={lang.identifier}
-                value={lang.identifier}
-                className="bg-black text-white"
-              >
-                {lang.name}
-              </option>
-            ))}
-          </select>}
-
-          <button 
-            className='bg-purple-600 text-white px-4 py-1.5 rounded font-medium text-sm hover:bg-purple-700 transition cursor-pointer'
+          <button
+            className="bg-purple-600 text-white px-4 py-1.5 rounded font-medium text-sm hover:bg-purple-700 transition cursor-pointer"
             onClick={handleGptSearchClick}
           >
             {showGptSearch ? "Home" : "GPT Search"}
           </button>
-          
+
           {/* User Icon & Dropdown Container */}
-          {user && 
+          {user && (
             <div className="relative ml-2">
-              <div 
+              <div
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setShowDropdown(!showDropdown)}
               >
                 {/* Primary Profile Image */}
-                <img 
-                  className="w-8 h-8 rounded" 
+                <img
+                  className="w-8 h-8 rounded"
                   src={user?.photoURL}
-                  alt="User Icon" 
+                  alt="User Icon"
                 />
                 <span></span>
-                <span className={`text-white text-[10px] transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}>
+                <span
+                  className={`text-white text-[10px] transition-transform duration-200 ${showDropdown ? "rotate-180" : ""}`}
+                >
                   ▼
                 </span>
               </div>
@@ -105,7 +102,7 @@ const Header = () => {
               {/* Simple Dropdown Menu */}
               {showDropdown && (
                 <div className="absolute right-0 top-10 w-40 bg-black/95 text-white border border-gray-800 rounded py-3 shadow-xl z-30">
-                  <div 
+                  <div
                     className="text-center text-xs font-medium hover:underline cursor-pointer py-1"
                     onClick={handleSignOut}
                   >
@@ -114,14 +111,11 @@ const Header = () => {
                 </div>
               )}
             </div>
-          
-          }
+          )}
         </div>
-
-
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
