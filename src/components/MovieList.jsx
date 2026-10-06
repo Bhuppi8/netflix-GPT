@@ -27,9 +27,7 @@ const MovieList = ({ title, movies }) => {
 
   return (
     <section className="bg-[#141414] px-6 py-5 text-white">
-      <h2 className="mb-4 text-2xl font-bold">
-        {title}
-      </h2>
+      <h2 className="mb-4 text-2xl font-bold">{title}</h2>
 
       <div
         ref={containerRef}
